@@ -1,5 +1,6 @@
 package fr.nonog.UHCRun;
 
+import fr.nonog.UHCRun.commands.CommandsUHC;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,6 +33,9 @@ public class UHCRun extends JavaPlugin {
             buildSpawn(world);
         }
 
+
+
+        getCommand("UHC").setExecutor(new CommandsUHC(this));
 
 
         getServer().getPluginManager().registerEvents(new UHCListeners(this), this);
