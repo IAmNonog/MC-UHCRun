@@ -39,7 +39,7 @@ public class CommandsUHC implements CommandExecutor {
                         teams.put(strings[2], new Vector<Player>());
 
                     }
-                    if(strings[1].equalsIgnoreCase("join") && strings.length >= 4) {
+                    else if(strings[1].equalsIgnoreCase("join") && strings.length >= 4) {
                         Player joiner = Bukkit.getPlayer(strings[3]);
                         try{
                             teams.get(strings[2]).add(joiner);
@@ -51,8 +51,20 @@ public class CommandsUHC implements CommandExecutor {
                             main.getServer().getConsoleSender().sendMessage(e.getMessage());
                         }
                     }
-                    
-                    if(strings[1].equalsIgnoreCase("list")) {
+                    else if(strings[1].equalsIgnoreCase("leave") && strings.length >= 4) {
+                        try{
+                            Player leaver = Bukkit.getPlayer(strings[3]);
+                            teams.get(strings[2]).remove(leaver);
+                            commandSender.sendMessage("[UHC] - "+leaver.getDisplayName()+" left "+ strings[2]);
+                        }
+                        catch (Exception e) {
+                            commandSender.sendMessage(ChatColor.RED + "[UHC] Error : use /uhc team leave [team] [player]");
+                            commandSender.sendMessage("An error has occurred. Please look at the console");
+                            main.getServer().getConsoleSender().sendMessage(e.getMessage());
+                        }
+
+                    }
+                    else if(strings[1].equalsIgnoreCase("list")) {
                         commandSender.sendMessage(ChatColor.GREEN + "---------------------");
                         commandSender.sendMessage(ChatColor.GOLD + "-- UHC - List of Teams --");
                         for(String team : teams.keySet()) {
@@ -65,7 +77,7 @@ public class CommandsUHC implements CommandExecutor {
                             commandSender.sendMessage(ChatColor.GOLD + "---------------------");
                         }
                     }
-                    if(strings[1].equalsIgnoreCase("del") && strings.length >=3) {
+                    else if(strings[1].equalsIgnoreCase("del") && strings.length >=3) {
                         try{
                             teams.remove(strings[2]);
                             commandSender.sendMessage("[UHC] - you deleted "+strings[2]+" team");
@@ -74,6 +86,17 @@ public class CommandsUHC implements CommandExecutor {
                             main.getServer().getConsoleSender().sendMessage(e.getMessage());
                         }
 
+                    }
+                    else{
+                        commandSender.sendMessage(ChatColor.GREEN + "---------------------");
+                        commandSender.sendMessage(ChatColor.GOLD + "-- UHC - List of Team Commands --");
+                        commandSender.sendMessage(ChatColor.GREEN + "---------------------");
+                        commandSender.sendMessage(ChatColor.GOLD + "/uhc team create [TeamName]" + ChatColor.WHITE +" : create a team with the given name");
+                        commandSender.sendMessage(ChatColor.GOLD + "/uhc team join [TeamName] [PlayerName]" + ChatColor.WHITE +" : the indicated player joins the indicated team");
+                        commandSender.sendMessage(ChatColor.GOLD + "/uhc team leave [TeamName] [PlayerName]" + ChatColor.WHITE +" : the indicated player leaves the indicated team");
+                        commandSender.sendMessage(ChatColor.GOLD + "/uhc team del [TeamName]" + ChatColor.WHITE +" : delete the indicated team");
+                        commandSender.sendMessage(ChatColor.GOLD + "/uhc team list" + ChatColor.WHITE +" : get the list of teams");
+                        commandSender.sendMessage(ChatColor.RED + "[UHC] - The command you entered does not follow the syntax above. Please check");
                     }
                 }
 
@@ -86,6 +109,7 @@ public class CommandsUHC implements CommandExecutor {
                 commandSender.sendMessage(ChatColor.GREEN + "---------------------");
                 commandSender.sendMessage(ChatColor.GOLD + "/uhc team create [TeamName]" + ChatColor.WHITE +" : create a team with the given name");
                 commandSender.sendMessage(ChatColor.GOLD + "/uhc team join [TeamName] [PlayerName]" + ChatColor.WHITE +" : the indicated player joins the indicated team");
+                commandSender.sendMessage(ChatColor.GOLD + "/uhc team leave [TeamName] [PlayerName]" + ChatColor.WHITE +" : the indicated player leaves the indicated team");
                 commandSender.sendMessage(ChatColor.GOLD + "/uhc team del [TeamName]" + ChatColor.WHITE +" : delete the indicated team");
                 commandSender.sendMessage(ChatColor.GOLD + "/uhc team list" + ChatColor.WHITE +" : get the list of teams");
 
