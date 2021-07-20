@@ -1,0 +1,37 @@
+#######################################
+#          UHC - TAUPE - RUN          #
+#######################################
+spawn:
+  buildSpawn: true
+  #coordonate of the center of the spawn
+  coordonate:
+    x: 0
+    y: 200
+    z: 0
+game:
+  map: "world"
+  #Size of border (1000x1000 by default)
+  map-size: 1000
+  deathMatch:
+    activateDeathMatch: true
+    #Time (in minutes) before teleportation
+    TimeBeforeDeathMatch: 30
+    #Size of border during deathMatch (200x200 by default)
+    map-size-DeathMatch: 200
+  gradualReduction:
+    enableReduction: true
+    #Time in minutes
+    TimeBeforeReduction: 20
+    mapSizeAfterReduction: 400
+    #Number of reduction blocks per second
+    ReductionSpeed: 1.0
+run:
+  enableRun: true
+  generation:
+    obsidianGenerate: true
+    # 0 for classic generation // 1 for double ores...
+    oreIncrease: 0.0
+taupe:
+  enableTaupe: false
+  #Time (in minutes) before announce of taupe
+  TimeBeforeReveal: 10
