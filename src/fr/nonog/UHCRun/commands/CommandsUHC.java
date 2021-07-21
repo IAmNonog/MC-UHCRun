@@ -7,6 +7,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 
 import java.util.TreeMap;
 import java.util.Vector;
@@ -15,10 +17,15 @@ public class CommandsUHC implements CommandExecutor {
 
     private UHCRun main;
     private TreeMap<String, Vector<Player>> teams;
+    private ScoreboardManager scoreboardManager;
+    private TreeMap<String, Team> scoreboardTeams;
 
     public CommandsUHC(UHCRun main) {
         this.main = main;
         teams = new TreeMap<String, Vector<Player>>();
+        scoreboardManager = Bukkit.getScoreboardManager();
+        scoreboardTeams = new TreeMap<String, Team>();
+
     }
 
     @Override
@@ -37,12 +44,14 @@ public class CommandsUHC implements CommandExecutor {
                     if(strings[1].equalsIgnoreCase("create") && strings.length >= 3) {
                         commandSender.sendMessage("[UHC] Team "+strings[2]+" created !");
                         teams.put(strings[2], new Vector<Player>());
+                        scoreboardTeams.put(strings[2], scoreboardManager.getMainScoreboard().registerNewTeam(strings[2]));
 
                     }
                     else if(strings[1].equalsIgnoreCase("join") && strings.length >= 4) {
                         Player joiner = Bukkit.getPlayer(strings[3]);
                         try{
                             teams.get(strings[2]).add(joiner);
+                            scoreboardTeams.get(strings[2]).addEntry(joiner.getDisplayName());
                             commandSender.sendMessage("[UHC] - "+joiner.getDisplayName()+" add to "+ strings[2]);
                         }
                         catch(Exception e) {
@@ -55,6 +64,7 @@ public class CommandsUHC implements CommandExecutor {
                         try{
                             Player leaver = Bukkit.getPlayer(strings[3]);
                             teams.get(strings[2]).remove(leaver);
+                            scoreboardTeams.get(strings[2]).removeEntry(leaver.getDisplayName());
                             commandSender.sendMessage("[UHC] - "+leaver.getDisplayName()+" left "+ strings[2]);
                         }
                         catch (Exception e) {
@@ -72,7 +82,10 @@ public class CommandsUHC implements CommandExecutor {
                             commandSender.sendMessage(ChatColor.GREEN + "Team :  "+team);
                             commandSender.sendMessage(ChatColor.GOLD + "Players");
                             for(Player pl : teams.get(team)) {
-                                commandSender.sendMessage(pl.getName());
+                                if(teams.get(team).size() > 0) {
+                                    commandSender.sendMessage(pl.getName());
+                                }
+
                             }
                             commandSender.sendMessage(ChatColor.GOLD + "---------------------");
                         }
@@ -81,6 +94,7 @@ public class CommandsUHC implements CommandExecutor {
                         try{
                             teams.remove(strings[2]);
                             commandSender.sendMessage("[UHC] - you deleted "+strings[2]+" team");
+                            scoreboardTeams.get(strings[2]).unregister();
                         }catch (Exception e) {
                             commandSender.sendMessage("[UHC] Error : It seems that this team does not exist");
                             main.getServer().getConsoleSender().sendMessage(e.getMessage());
@@ -121,5 +135,20 @@ public class CommandsUHC implements CommandExecutor {
         }
 
         return exec;
+    }
+
+    public boolean deleteAllScoreBoardTeams() {
+        boolean result = false;
+        for(String teamName : scoreboardTeams.keySet()) {
+            try{
+                scoreboardTeams.get(teamName).unregister();
+                result = true;
+            }catch (Exception e) {
+                main.getServer().getConsoleSender().sendMessage(e.getMessage());
+            }
+
+        }
+        return result;
+
     }
 }

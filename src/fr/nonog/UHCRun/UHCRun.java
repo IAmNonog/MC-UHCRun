@@ -5,13 +5,18 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 public class UHCRun extends JavaPlugin {
 
     private FileConfiguration config;
     private boolean gameLaunch;
+    private CommandsUHC commandsUHC;
+    private Objective healthPrint;
 
 
 
@@ -20,6 +25,7 @@ public class UHCRun extends JavaPlugin {
         saveDefaultConfig();
         config = this.getConfig();
         gameLaunch = false;
+        commandsUHC = new CommandsUHC(this);
 
         String worldname = config.getString("game.map");
         World world = Bukkit.getWorld(worldname);
@@ -34,8 +40,10 @@ public class UHCRun extends JavaPlugin {
         }
 
 
+        healthPrint = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective("HealthUHC", "health");
+        healthPrint.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 
-        getCommand("UHC").setExecutor(new CommandsUHC(this));
+        getCommand("UHC").setExecutor(commandsUHC);
 
 
         getServer().getPluginManager().registerEvents(new UHCListeners(this), this);
@@ -45,6 +53,17 @@ public class UHCRun extends JavaPlugin {
 
     @Override
     public void onDisable() {
+
+        healthPrint.unregister();
+        boolean verifTeamDel = commandsUHC.deleteAllScoreBoardTeams();
+        if(verifTeamDel) {
+            getServer().getConsoleSender().sendMessage(ChatColor.RED + "[UHCRun] Scoreboard Teams correctly deleted !");
+        }
+        else{
+            getServer().getConsoleSender().sendMessage(ChatColor.RED + "[UHCRun] Error : Scoreboard Teams not properly deleted !");
+
+        }
+
 
 
         getServer().getConsoleSender().sendMessage(ChatColor.RED + "[UHCRun] plugin disabled !");
