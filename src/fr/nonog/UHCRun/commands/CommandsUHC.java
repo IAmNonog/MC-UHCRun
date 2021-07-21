@@ -97,6 +97,7 @@ public class CommandsUHC implements CommandExecutor {
                             teams.remove(strings[2]);
                             commandSender.sendMessage("[UHC] - you deleted "+strings[2]+" team");
                             scoreboardTeams.get(strings[2]).unregister();
+                            scoreboardTeams.remove(strings[2]);
                         }catch (Exception e) {
                             commandSender.sendMessage("[UHC] Error : It seems that this team does not exist");
                             main.getServer().getConsoleSender().sendMessage(e.getMessage());
@@ -174,6 +175,7 @@ public class CommandsUHC implements CommandExecutor {
                     if(teams.get(nameTeam).size() == 0) {
                         teams.remove(nameTeam);
                         scoreboardTeams.get(nameTeam).unregister();
+                        scoreboardTeams.remove(nameTeam);
                     }
                 }
             }
