@@ -1,11 +1,13 @@
 package fr.nonog.UHCRun;
 
+import fr.nonog.UHCRun.commands.CommandsUHC;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -13,9 +15,11 @@ import org.bukkit.scoreboard.ScoreboardManager;
 public class UHCListeners implements Listener {
 
     private UHCRun main;
+    private CommandsUHC commandsUHC;
 
-    public UHCListeners(UHCRun main) {
+    public UHCListeners(UHCRun main, CommandsUHC commandsUHC) {
         this.main = main;
+        this.commandsUHC = commandsUHC;
     }
 
 
@@ -39,5 +43,18 @@ public class UHCListeners implements Listener {
 
 
         }
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent e) {
+        //if(main.isGameLaunch()) {
+            boolean quitverif = commandsUHC.leavePlayerTeam(e.getEntity());
+            if(quitverif) {
+                main.getServer().getConsoleSender().sendMessage("[UHC] - Player "+e.getEntity().getName()+" left his team (death) ");
+            }
+
+        //}
+
+
     }
 }

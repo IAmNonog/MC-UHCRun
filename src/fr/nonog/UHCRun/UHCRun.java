@@ -46,7 +46,7 @@ public class UHCRun extends JavaPlugin {
         getCommand("UHC").setExecutor(commandsUHC);
 
 
-        getServer().getPluginManager().registerEvents(new UHCListeners(this), this);
+        getServer().getPluginManager().registerEvents(new UHCListeners(this, commandsUHC), this);
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[UHCRun] plugin enabled !");
     }

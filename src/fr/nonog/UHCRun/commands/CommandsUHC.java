@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
+import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -71,6 +72,7 @@ public class CommandsUHC implements CommandExecutor {
                             commandSender.sendMessage(ChatColor.RED + "[UHC] Error : use /uhc team leave [team] [player]");
                             commandSender.sendMessage("An error has occurred. Please look at the console");
                             main.getServer().getConsoleSender().sendMessage(e.getMessage());
+
                         }
 
                     }
@@ -150,5 +152,32 @@ public class CommandsUHC implements CommandExecutor {
         }
         return result;
 
+    }
+    public boolean leavePlayerTeam(Player p) {
+        boolean result = false;
+        for(String nameTeam : teams.keySet()) {
+            //for(Player pl : teams.get(nameTeam)) {
+            Iterator<Player> itr = teams.get(nameTeam).iterator();
+            while(itr.hasNext()) {
+                Player pl = itr.next();
+                if(p.equals(pl)) {
+                    try {
+                        //teams.get(nameTeam).remove(p);
+                        itr.remove();
+                        scoreboardTeams.get(nameTeam).removeEntry(p.getDisplayName());
+                    } catch (Exception e) {
+                        main.getServer().getConsoleSender().sendMessage(e.getMessage());
+                    }
+
+                    result = true;
+
+                    if(teams.get(nameTeam).size() == 0) {
+                        teams.remove(nameTeam);
+                        scoreboardTeams.get(nameTeam).unregister();
+                    }
+                }
+            }
+        }
+        return result;
     }
 }
