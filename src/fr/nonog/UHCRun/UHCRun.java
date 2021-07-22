@@ -107,4 +107,16 @@ public class UHCRun extends JavaPlugin {
     public FileConfiguration getConfigur() {
         return config;
     }
+    public void launchGame(Boolean team) {
+        int x = config.getInt("spawn.coordonate.x");
+        int z = config.getInt("spawn.coordonate.z");
+        int minDistance = 100;
+        int maxRange = config.getInt("game.map-size") /2;
+        if(team) {
+            String playersSelector = "@a[team=!]";
+            boolean respectTeams = true;
+            Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), String.format("spreadplayers %d %d %d %d %b %s", x, z, minDistance, maxRange, respectTeams, playersSelector));
+
+        }
+    }
 }
