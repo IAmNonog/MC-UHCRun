@@ -1,14 +1,22 @@
 package fr.nonog.UHCRun;
 
 import fr.nonog.UHCRun.commands.CommandsUHC;
+import fr.nonog.UHCRun.tasks.ReductionTimer;
+import fr.nonog.UHCRun.tasks.StartTimer;
+import net.minecraft.server.v1_8_R3.GameRules;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 
 import java.util.HashMap;
+import java.util.TimerTask;
 import java.util.Vector;
 
 public class UHCRun extends JavaPlugin {
@@ -16,7 +24,7 @@ public class UHCRun extends JavaPlugin {
     private FileConfiguration config;
     private boolean gameLaunch;
     private CommandsUHC commandsUHC;
-    private Objective healthPrint;
+    private ScoreBoard scoreBoard;
 
 
 
@@ -26,6 +34,12 @@ public class UHCRun extends JavaPlugin {
         config = this.getConfig();
         gameLaunch = false;
         commandsUHC = new CommandsUHC(this);
+
+
+        scoreBoard = new ScoreBoard(this);
+        scoreBoard.setBeforeGame();
+
+
 
         String worldname = config.getString("game.map");
         World world = Bukkit.getWorld(worldname);
@@ -40,21 +54,24 @@ public class UHCRun extends JavaPlugin {
         }
 
 
-        healthPrint = Bukkit.getScoreboardManager().getMainScoreboard().registerNewObjective("HealthUHC", "health");
-        healthPrint.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+
 
         getCommand("UHC").setExecutor(commandsUHC);
 
 
-        getServer().getPluginManager().registerEvents(new UHCListeners(this, commandsUHC), this);
+        getServer().getPluginManager().registerEvents(new UHCListeners(this, commandsUHC, scoreBoard), this);
 
+
+
+        world.setGameRuleValue("naturalRegeneration", "false");
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[UHCRun] plugin enabled !");
     }
 
     @Override
     public void onDisable() {
 
-        healthPrint.unregister();
+
+        scoreBoard.del();
         boolean verifTeamDel = commandsUHC.deleteAllScoreBoardTeams();
         if(verifTeamDel) {
             getServer().getConsoleSender().sendMessage(ChatColor.RED + "[UHCRun] Scoreboard Teams correctly deleted !");
@@ -107,16 +124,55 @@ public class UHCRun extends JavaPlugin {
     public FileConfiguration getConfigur() {
         return config;
     }
+
+
+
     public void launchGame(Boolean team) {
         int x = config.getInt("spawn.coordonate.x");
         int z = config.getInt("spawn.coordonate.z");
         int minDistance = 100;
-        int maxRange = config.getInt("game.map-size") /2;
+        int maxRange = (config.getInt("game.map-size") /2);
         if(team) {
+
             String playersSelector = "@a[team=!]";
             boolean respectTeams = true;
+
+            commandsUHC.deleteEmptyTeams();
+            setGameLaunch(true);
+
+
             Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), String.format("spreadplayers %d %d %d %d %b %s", x, z, minDistance, maxRange, respectTeams, playersSelector));
+
+            for(Player p : Bukkit.getOnlinePlayers()) {
+                if(commandsUHC.isInATeam(p)) {
+                    p.setGameMode(GameMode.SURVIVAL);
+
+                    p.setHealth(15);
+                    p.setFoodLevel(20);
+                    p.setLevel(0);
+                    p.getInventory().clear();
+                    p.getInventory().setArmorContents(null);
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*60, 5, false, true));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20*30, 5, false, true));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*30, 5, false, true));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*30, 5, false, true));
+
+
+                }
+
+            }
+
+            if(config.getBoolean("game.gradualReduction.enableReduction")) {
+                ReductionTimer reductionTimer = new ReductionTimer(this);
+                reductionTimer.runTaskTimer(this, 0, 20);
+            }
 
         }
     }
+
+    public ScoreBoard getScoreBoard() {
+        return scoreBoard;
+    }
+
+
 }

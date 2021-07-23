@@ -1,6 +1,7 @@
 package fr.nonog.UHCRun.commands;
 
 import fr.nonog.UHCRun.UHCRun;
+import fr.nonog.UHCRun.tasks.StartTimer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -138,7 +139,9 @@ public class CommandsUHC implements CommandExecutor {
                 if (strings.length >= 2) {
                     if (strings[1].equalsIgnoreCase("team")) {
                         Bukkit.broadcastMessage(ChatColor.GREEN+"[UHC] - The game is about to start");
-                        main.launchGame(true);
+                        StartTimer startTimer = new StartTimer(main);
+                        startTimer.runTaskTimer(main, 0, 20);
+
                     }
                 }
                 else{
@@ -185,7 +188,10 @@ public class CommandsUHC implements CommandExecutor {
     }
     public boolean leavePlayerTeam(Player p) {
         boolean result = false;
-        for(String nameTeam : teams.keySet()) {
+        Iterator<String> namesTeam = teams.keySet().iterator();
+        while(namesTeam.hasNext()) {
+            String nameTeam = namesTeam.next();
+        //for(String nameTeam : teams.keySet()) {
             //for(Player pl : teams.get(nameTeam)) {
             Iterator<Player> itr = teams.get(nameTeam).iterator();
             while(itr.hasNext()) {
@@ -202,9 +208,11 @@ public class CommandsUHC implements CommandExecutor {
                     result = true;
 
                     if(teams.get(nameTeam).size() == 0) {
-                        teams.remove(nameTeam);
+                        //teams.remove(nameTeam);
+                        namesTeam.remove();
                         scoreboardTeams.get(nameTeam).unregister();
                         scoreboardTeams.remove(nameTeam);
+                        Bukkit.broadcastMessage(ChatColor.GOLD+"[UHC] - Team "+nameTeam+" has been eliminated (empty team)");
                     }
                 }
             }
@@ -213,7 +221,9 @@ public class CommandsUHC implements CommandExecutor {
     }
     public boolean leavePlayerTeamByName(String name) {
         boolean result = false;
-        for(String nameTeam : teams.keySet()) {
+        Iterator<String> namesTeam = teams.keySet().iterator();
+        while(namesTeam.hasNext()) {
+            String nameTeam = namesTeam.next();
 
             Iterator<Player> itr = teams.get(nameTeam).iterator();
             while(itr.hasNext()) {
@@ -230,7 +240,7 @@ public class CommandsUHC implements CommandExecutor {
                     result = true;
 
                     if(teams.get(nameTeam).size() == 0) {
-                        teams.remove(nameTeam);
+                        namesTeam.remove();
                         scoreboardTeams.get(nameTeam).unregister();
                         scoreboardTeams.remove(nameTeam);
                         Bukkit.broadcastMessage(ChatColor.GOLD+"[UHC] - Team "+nameTeam+" has been eliminated (empty team)");
@@ -239,5 +249,48 @@ public class CommandsUHC implements CommandExecutor {
             }
         }
         return result;
+    }
+
+    public int getNBTeams() {
+        int compt = 0;
+        for(String s : teams.keySet()) {
+            compt++;
+        }
+        return compt;
+    }
+
+    public void printWinner() {
+        for(String s : teams.keySet()) {
+            Bukkit.broadcastMessage(ChatColor.GREEN+"[UHC] - The team "+s+" won the game!");
+            Bukkit.broadcastMessage(ChatColor.GOLD+"[UHC] - Winners : ");
+            for(Player pl : teams.get(s)) {
+                Bukkit.broadcastMessage(ChatColor.GOLD+" - "+pl.getDisplayName());
+            }
+        }
+    }
+    public void deleteEmptyTeams() {
+        Iterator<String> namesTeam = teams.keySet().iterator();
+        while(namesTeam.hasNext()) {
+            String nameTeam = namesTeam.next();
+        //for(String nameTeam : teams.keySet()) {
+            if(teams.get(nameTeam).size() == 0) {
+                namesTeam.remove();
+                //teams.remove(nameTeam);
+                scoreboardTeams.get(nameTeam).unregister();
+                scoreboardTeams.remove(nameTeam);
+                Bukkit.broadcastMessage(ChatColor.GOLD+"[UHC] - Team "+nameTeam+" has been eliminated (empty team)");
+            }
+        }
+    }
+    public boolean isInATeam(Player p) {
+        boolean b = false;
+        for(String s : teams.keySet()) {
+            for(Player pl : teams.get(s)) {
+                if(pl.getDisplayName().equals(p.getDisplayName())) {
+                    b = true;
+                }
+            }
+        }
+        return b;
     }
 }
