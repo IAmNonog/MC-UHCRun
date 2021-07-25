@@ -2,8 +2,6 @@ package fr.nonog.UHCRun;
 
 import fr.nonog.UHCRun.commands.CommandsUHC;
 import fr.nonog.UHCRun.tasks.ReductionTimer;
-import fr.nonog.UHCRun.tasks.StartTimer;
-import net.minecraft.server.v1_8_R3.GameRules;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,12 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
 
-import java.util.HashMap;
-import java.util.TimerTask;
 import java.util.Vector;
 
 public class UHCRun extends JavaPlugin {
@@ -147,12 +140,12 @@ public class UHCRun extends JavaPlugin {
                 if(commandsUHC.isInATeam(p)) {
                     p.setGameMode(GameMode.SURVIVAL);
 
-                    p.setHealth(15);
+                    p.setHealth(20);
                     p.setFoodLevel(20);
                     p.setLevel(0);
                     p.getInventory().clear();
                     p.getInventory().setArmorContents(null);
-                    p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*60, 5, false, true));
+                    //p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*60, 5, false, true));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20*30, 5, false, true));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*30, 5, false, true));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*30, 5, false, true));
@@ -172,6 +165,19 @@ public class UHCRun extends JavaPlugin {
 
     public ScoreBoard getScoreBoard() {
         return scoreBoard;
+    }
+
+
+    public void reductionWorldBorder(int mapSize, int speed) {
+        String worldname = config.getString("game.map");
+        World world = Bukkit.getWorld(worldname);
+
+
+        WorldBorder wb = world.getWorldBorder();
+
+        int sp = (int)((wb.getSize()-mapSize)/speed);
+
+        wb.setSize(mapSize, sp);
     }
 
 

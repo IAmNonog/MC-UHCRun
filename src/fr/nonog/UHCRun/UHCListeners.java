@@ -41,7 +41,7 @@ public class UHCListeners implements Listener {
             player.getInventory().setArmorContents(null);
             player.setFoodLevel(20);
             player.setGameMode(GameMode.ADVENTURE);
-            player.setHealth(20);
+            player.setHealth(19.9);
             player.setLevel(0);
 
             ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();

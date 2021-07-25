@@ -1,6 +1,12 @@
 #######################################
 #          UHC - TAUPE - RUN          #
 #######################################
+
+##########          WARNING          ##########
+#   Warning ! The options that are commented out (with a hash in front)
+#   are not yet implemented (probably because you are using a beta version of the plugin,
+#   do not hesitate to check if a more recent version is available : [https://github.com/IAmNonog/MC-UHCRun] )
+###############################################
 spawn:
   buildSpawn: true
   #coordonate of the center of the spawn
@@ -12,26 +18,26 @@ game:
   map: "world"
   #Size of border (1000x1000 by default)
   map-size: 1000
-  deathMatch:
-    activateDeathMatch: true
+#  deathMatch:
+#    activateDeathMatch: false
     #Time (in minutes) before teleportation
-    TimeBeforeDeathMatch: 30
+#    TimeBeforeDeathMatch: 30
     #Size of border during deathMatch (200x200 by default)
-    map-size-DeathMatch: 200
+#    map-size-DeathMatch: 200
   gradualReduction:
     enableReduction: true
     #Time in minutes
     TimeBeforeReduction: 20
     mapSizeAfterReduction: 400
     #Number of reduction blocks per second
-    ReductionSpeed: 1.0
-run:
-  enableRun: true
-  generation:
-    obsidianGenerate: true
+    ReductionSpeed: 1
+#run:
+#  enableRun: false
+#  generation:
+#    obsidianGenerate: true
     # 0 for classic generation // 1 for double ores...
-    oreIncrease: 0.0
-taupe:
-  enableTaupe: false
-  #Time (in minutes) before announce of taupe
-  TimeBeforeReveal: 10
+#    oreIncrease: 0.0
+#taupe:
+#  enableTaupe: false
+#  #Time (in minutes) before announce of taupe
+#  TimeBeforeReveal: 10

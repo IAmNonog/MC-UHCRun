@@ -31,7 +31,18 @@ public class ReductionTimer extends BukkitRunnable {
         }
         if(timerM==0 && timerS==0) {
             Bukkit.broadcastMessage(ChatColor.GREEN+"[UHC] - The map begins to shrink to a size of "+main.getConfigur().getInt("game.gradualReduction.mapSizeAfterReduction"));
-            //Appel la fonction de reduction de la map
+
+            main.reductionWorldBorder(main.getConfigur().getInt("game.gradualReduction.mapSizeAfterReduction"), main.getConfigur().getInt("game.gradualReduction.ReductionSpeed"));
+
+            if(main.getConfigur().getBoolean("game.gradualReduction.enableReduction")) {
+                DuringReductionTimer drt = new DuringReductionTimer(main);
+                drt.runTaskTimer(main, 0, 20);
+            }
+
+            cancel();
+        }
+        if(!main.isGameLaunch()) {
+            main.getScoreBoard().setGameFinished();
             cancel();
         }
 
