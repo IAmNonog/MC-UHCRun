@@ -13,9 +13,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import java.util.TreeMap;
-import java.util.Vector;
-import java.util.concurrent.TimeUnit;
 
 public class UHCListeners implements Listener {
 

@@ -1,6 +1,6 @@
 package fr.nonog.UHCRun.tasks;
 
-import fr.nonog.UHCRun.ScoreBoard;
+
 import fr.nonog.UHCRun.UHCRun;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

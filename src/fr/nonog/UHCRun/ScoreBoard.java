@@ -2,7 +2,6 @@ package fr.nonog.UHCRun;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
@@ -192,6 +191,7 @@ public class ScoreBoard {
         for(Player all : Bukkit.getOnlinePlayers()) {
             all.setScoreboard(scoreBoard);
         }
+
     }
 
 
