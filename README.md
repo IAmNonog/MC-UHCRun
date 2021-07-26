@@ -21,10 +21,10 @@ _______________________________________________
 play without a team: just enter "/uhc start single"  
 
 play as a team:
-  create a team: /uhc team create [nameTeam] or /uhc team create [nameTeam] [COLOR]  
+  * create a team: /uhc team create [nameTeam] or /uhc team create [nameTeam] [COLOR]  
                  available colors : RED, BLUE, GREEN, GOLD, WHITE, YELLOW, AQUA, PURPLE  
-  join a team:   /uhc team join [nameTeam] [namePlayer]  
-  launch:        /uhc start team  
+  * join a team:   /uhc team join [nameTeam] [namePlayer]  
+  * launch:        /uhc start team  
   
   
 ________________________________________________
