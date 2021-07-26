@@ -164,6 +164,7 @@ public class CommandsUHC implements CommandExecutor {
                         commandSender.sendMessage(ChatColor.GOLD + "-- UHC - List of Team Commands --");
                         commandSender.sendMessage(ChatColor.GREEN + "---------------------");
                         commandSender.sendMessage(ChatColor.GOLD + "/uhc team create [TeamName]" + ChatColor.WHITE +" : create a team with the given name");
+                        commandSender.sendMessage(ChatColor.GOLD + "/uhc team create [TeamName] [COLOR]" + ChatColor.WHITE +" : create a team with a color (In capital letters) e.g. : uhc team create example RED");
                         commandSender.sendMessage(ChatColor.GOLD + "/uhc team join [TeamName] [PlayerName]" + ChatColor.WHITE +" : the indicated player joins the indicated team");
                         commandSender.sendMessage(ChatColor.GOLD + "/uhc team leave [TeamName] [PlayerName]" + ChatColor.WHITE +" : the indicated player leaves the indicated team");
                         commandSender.sendMessage(ChatColor.GOLD + "/uhc team del [TeamName]" + ChatColor.WHITE +" : delete the indicated team");
@@ -183,12 +184,20 @@ public class CommandsUHC implements CommandExecutor {
                         startTimer.runTaskTimer(main, 0, 20);
 
                     }
+                    if (strings[1].equalsIgnoreCase("single")) {
+                        Bukkit.broadcastMessage(ChatColor.GREEN+"[UHC] - The game is about to start");
+                        createSoloTeams();
+                        StartTimer startTimer = new StartTimer(main);
+                        startTimer.runTaskTimer(main, 0, 20);
+
+                    }
                 }
                 else{
                     commandSender.sendMessage(ChatColor.GREEN + "---------------------");
                     commandSender.sendMessage(ChatColor.GOLD + "-- UHC - List of Start Commands --");
                     commandSender.sendMessage(ChatColor.GREEN + "---------------------");
                     commandSender.sendMessage(ChatColor.GOLD + "/uhc start team" + ChatColor.WHITE +" : start the game respecting the teams you have previously created");
+                    commandSender.sendMessage(ChatColor.GOLD + "/uhc start single" + ChatColor.WHITE +" : start the game in a team of 1 player");
 
                 }
             }
@@ -197,10 +206,12 @@ public class CommandsUHC implements CommandExecutor {
                 commandSender.sendMessage(ChatColor.GOLD + "-- UHC - List of Commands --");
                 commandSender.sendMessage(ChatColor.GREEN + "---------------------");
                 commandSender.sendMessage(ChatColor.GOLD + "/uhc team create [TeamName]" + ChatColor.WHITE +" : create a team with the given name");
+                commandSender.sendMessage(ChatColor.GOLD + "/uhc team create [TeamName] [COLOR]" + ChatColor.WHITE +" : create a team with a color (In capital letters) e.g. : uhc team create example RED");
                 commandSender.sendMessage(ChatColor.GOLD + "/uhc team join [TeamName] [PlayerName]" + ChatColor.WHITE +" : the indicated player joins the indicated team");
                 commandSender.sendMessage(ChatColor.GOLD + "/uhc team leave [TeamName] [PlayerName]" + ChatColor.WHITE +" : the indicated player leaves the indicated team");
                 commandSender.sendMessage(ChatColor.GOLD + "/uhc team del [TeamName]" + ChatColor.WHITE +" : delete the indicated team");
                 commandSender.sendMessage(ChatColor.GOLD + "/uhc team list" + ChatColor.WHITE +" : get the list of teams");
+                commandSender.sendMessage(ChatColor.GOLD + "/uhc start [Team/Single]" + ChatColor.WHITE +" : start the game");
 
 
 
@@ -425,6 +436,24 @@ public class CommandsUHC implements CommandExecutor {
                 pl.teleport(new Location(pl.getWorld(), x, pl.getWorld().getHighestBlockYAt(x, z)+5, z));
 
             }
+        }
+    }
+    public void deleteAllTeams() {
+        deleteEmptyTeams();
+        deleteAllScoreBoardTeams();
+        Iterator<String> namesTeam = teams.keySet().iterator();
+        while(namesTeam.hasNext()) {
+            namesTeam.remove();
+
+        }
+    }
+    public void createSoloTeams() {
+        deleteAllTeams();
+        int i=0;
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            teams.put("UHCTeamSolo"+i, new Vector<Player>());
+            teams.get("UHCTeamSolo"+i).add(p);
+            i++;
         }
     }
 }

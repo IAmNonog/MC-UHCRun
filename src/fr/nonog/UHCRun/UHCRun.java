@@ -74,6 +74,7 @@ public class UHCRun extends JavaPlugin {
             getServer().getConsoleSender().sendMessage(ChatColor.RED + "[UHCRun] Error : Scoreboard Teams not properly deleted !");
 
         }
+        commandsUHC.deleteAllTeams();
         scoreBoard.del();
 
 
