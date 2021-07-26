@@ -2,9 +2,7 @@ package fr.nonog.UHCRun.commands;
 
 import fr.nonog.UHCRun.UHCRun;
 import fr.nonog.UHCRun.tasks.StartTimer;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -200,6 +198,37 @@ public class CommandsUHC implements CommandExecutor {
                     commandSender.sendMessage(ChatColor.GOLD + "/uhc start single" + ChatColor.WHITE +" : start the game in a team of 1 player");
 
                 }
+            }
+            else if(strings.length >= 1 && strings[0].equalsIgnoreCase("generate")) {
+
+                if(main.getConfigur().getBoolean("run.generation.increaseOreGeneration")) {
+                    Bukkit.broadcastMessage(ChatColor.RED+""+ChatColor.BOLD+"[UHC] - Warning ! Generation of additional minerals ... This will generate a lot of lag (Beta feature)");
+
+                    int xm = (int)(main.getConfigur().getInt("game.map-size") /2);
+                    int zm = (int)(main.getConfigur().getInt("game.map-size") /2);
+                    World w = Bukkit.getWorld(main.getConfigur().getString("game.map"));
+                    for(int x=(-xm); x<=(xm); x++) {
+                        for (int z = (-zm); z <= (zm); z++) {
+                            for (int y = 1; y < 65; y++) {
+                                Block b = w.getBlockAt(x, y, z);
+                                if(b.getType().equals(Material.STONE)) {
+                                    int r = (int)(Math.random()*2000);
+                                    if(r<2) {
+                                        b.setType(Material.DIAMOND_ORE);
+                                    }
+                                    if(r>2 && r<6) {
+                                        b.setType(Material.IRON_ORE);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    Bukkit.broadcastMessage(ChatColor.GREEN+""+ChatColor.BOLD+"[UHC] - Done");
+
+
+
+                }
+
             }
             else{
                 commandSender.sendMessage(ChatColor.GREEN + "---------------------");
