@@ -64,7 +64,7 @@ public class UHCListeners implements Listener {
 
                 e.getEntity().spigot().respawn();
                 for(Player p : Bukkit.getOnlinePlayers()) {
-                    p.teleport(new Location( (Bukkit.getWorld(main.getConfigur().getString("game.map"))) , main.getConfigur().getDouble("spawn.coordonate.x") , main.getConfigur().getDouble("spawn.coordonate.y") +3 , main.getConfigur().getDouble("spawn.coordonate.z") ));
+                    p.teleport(new Location( (Bukkit.getWorld(main.getConfigur().getString("game.map"))) , main.getConfigur().getDouble("spawn.coordonate.x") , main.getConfigur().getDouble("spawn.coordonate.y") +5 , main.getConfigur().getDouble("spawn.coordonate.z") ));
                     p.setGameMode(GameMode.ADVENTURE);
                 }
 

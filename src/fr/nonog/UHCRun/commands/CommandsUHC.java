@@ -4,16 +4,20 @@ import fr.nonog.UHCRun.UHCRun;
 import fr.nonog.UHCRun.tasks.StartTimer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.Random;
 
 public class CommandsUHC implements CommandExecutor {
 
@@ -21,13 +25,14 @@ public class CommandsUHC implements CommandExecutor {
     private TreeMap<String, Vector<Player>> teams;
     private ScoreboardManager scoreboardManager;
     private TreeMap<String, Team> scoreboardTeams;
+    private Scoreboard newSC;
 
     public CommandsUHC(UHCRun main) {
         this.main = main;
         teams = new TreeMap<String, Vector<Player>>();
         scoreboardManager = Bukkit.getScoreboardManager();
         scoreboardTeams = new TreeMap<String, Team>();
-
+        newSC = main.getScoreBoard().getScoreBoard();
     }
 
     @Override
@@ -47,7 +52,43 @@ public class CommandsUHC implements CommandExecutor {
                     if(strings[1].equalsIgnoreCase("create") && strings.length >= 3) {
                         commandSender.sendMessage("[UHC] Team "+strings[2]+" created !");
                         teams.put(strings[2], new Vector<Player>());
-                        scoreboardTeams.put(strings[2], scoreboardManager.getMainScoreboard().registerNewTeam(strings[2]));
+
+
+                        if(strings.length >= 4) {
+                            Team t = newSC.registerNewTeam(strings[2]);
+
+                            switch (strings[3]) {
+                                case "RED":
+                                    t.setPrefix(ChatColor.RED.toString());
+                                    break;
+                                case "BLUE":
+                                    t.setPrefix(ChatColor.BLUE.toString());
+                                    break;
+                                case "GREEN":
+                                    t.setPrefix(ChatColor.GREEN.toString());
+                                    break;
+                                case "GOLD":
+                                    t.setPrefix(ChatColor.GOLD.toString());
+                                    break;
+                                case "WHITE":
+                                    t.setPrefix(ChatColor.WHITE.toString());
+                                    break;
+                                case "YELLOW":
+                                    t.setPrefix(ChatColor.YELLOW.toString());
+                                    break;
+                                case "AQUA":
+                                    t.setPrefix(ChatColor.AQUA.toString());
+                                    break;
+                                case "PURPLE":
+                                    t.setPrefix(ChatColor.LIGHT_PURPLE.toString());
+                                    break;
+                            }
+                            scoreboardTeams.put(strings[2], t);
+
+                        }
+                        else{
+                            scoreboardTeams.put(strings[2], newSC.registerNewTeam(strings[2]));
+                        }
 
                     }
                     else if(strings[1].equalsIgnoreCase("join") && strings.length >= 4) {
@@ -176,6 +217,7 @@ public class CommandsUHC implements CommandExecutor {
         for(String teamName : scoreboardTeams.keySet()) {
             try{
                 scoreboardTeams.get(teamName).unregister();
+                newSC = null;
                 result = true;
             }catch (Exception e) {
                 main.getServer().getConsoleSender().sendMessage(e.getMessage());
@@ -209,8 +251,11 @@ public class CommandsUHC implements CommandExecutor {
                     if(teams.get(nameTeam).size() == 0) {
                         //teams.remove(nameTeam);
                         namesTeam.remove();
-                        scoreboardTeams.get(nameTeam).unregister();
-                        scoreboardTeams.remove(nameTeam);
+                        if(scoreboardTeams.get(nameTeam)!=null) {
+                            scoreboardTeams.get(nameTeam).unregister();
+                            scoreboardTeams.remove(nameTeam);
+                        }
+
                         Bukkit.broadcastMessage(ChatColor.GOLD+"[UHC] - Team "+nameTeam+" has been eliminated (empty team)");
                     }
                 }
@@ -218,6 +263,45 @@ public class CommandsUHC implements CommandExecutor {
         }
         return result;
     }
+
+    public boolean leavePlayerTeamWithoutSC(Player p) {
+        boolean result = false;
+        Iterator<String> namesTeam = teams.keySet().iterator();
+        while(namesTeam.hasNext()) {
+            String nameTeam = namesTeam.next();
+            //for(String nameTeam : teams.keySet()) {
+            //for(Player pl : teams.get(nameTeam)) {
+            Iterator<Player> itr = teams.get(nameTeam).iterator();
+            while(itr.hasNext()) {
+                Player pl = itr.next();
+                if(p.equals(pl)) {
+                    try {
+                        //teams.get(nameTeam).remove(p);
+                        itr.remove();
+                        //scoreboardTeams.get(nameTeam).removeEntry(p.getDisplayName());
+                    } catch (Exception e) {
+                        main.getServer().getConsoleSender().sendMessage(e.getMessage());
+                    }
+
+                    result = true;
+
+                    if(teams.get(nameTeam).size() == 0) {
+                        //teams.remove(nameTeam);
+                        namesTeam.remove();
+                        if(scoreboardTeams.get(nameTeam)!=null) {
+                            scoreboardTeams.get(nameTeam).unregister();
+                            scoreboardTeams.remove(nameTeam);
+                        }
+
+                        Bukkit.broadcastMessage(ChatColor.GOLD+"[UHC] - Team "+nameTeam+" has been eliminated (empty team)");
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+
     public boolean leavePlayerTeamByName(String name) {
         boolean result = false;
         Iterator<String> namesTeam = teams.keySet().iterator();
@@ -291,5 +375,56 @@ public class CommandsUHC implements CommandExecutor {
             }
         }
         return b;
+    }
+
+
+    public void selectionTaupe() {
+        teams.put("TAUPES", new Vector<Player>());
+        Iterator<String> namesTeam = teams.keySet().iterator();
+        while(namesTeam.hasNext()) {
+            String nameTeam = namesTeam.next();
+            Vector<Player> t = null;
+            if(!nameTeam.equals("TAUPES")) {
+                t = teams.get(nameTeam);
+                if(t.size()>0) {
+                    Random random = new Random();
+
+                    int r = random.nextInt(t.size());
+                    Player taupe = t.get(r);
+                    leavePlayerTeamWithoutSC(taupe);
+                    teams.get("TAUPES").add(taupe);
+                }
+            }
+
+
+
+
+        }
+        for(Player pl : teams.get("TAUPES")) {
+            pl.sendMessage(ChatColor.RED+"[UHC] - You are a Taupe (a traitor) you must betray your team and win with the other Taupes");
+            pl.sendMessage(ChatColor.RED+"[UHC] - Here is the list of TAUPES : ");
+            for(Player pla : teams.get("TAUPES")) {
+                pl.sendMessage(ChatColor.RED+"- "+pla.getDisplayName());
+            }
+            pl.sendMessage(ChatColor.RED+"----------");
+
+        }
+
+
+    }
+    public void spreedPlayers() {
+
+        for(String s : teams.keySet()) {
+            int maxRange = (main.getConfigur().getInt("game.map-size") /2);
+            Random random = new Random();
+            int x = -maxRange+random.nextInt(maxRange-(-maxRange));
+            int z = -maxRange+random.nextInt(maxRange-(-maxRange));
+
+
+            for (Player pl : teams.get(s)) {
+                pl.teleport(new Location(pl.getWorld(), x, pl.getWorld().getHighestBlockYAt(x, z)+5, z));
+
+            }
+        }
     }
 }

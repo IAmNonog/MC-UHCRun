@@ -1,6 +1,7 @@
 package fr.nonog.UHCRun;
 
 import fr.nonog.UHCRun.commands.CommandsUHC;
+import fr.nonog.UHCRun.tasks.BeforeTaupeTimer;
 import fr.nonog.UHCRun.tasks.ReductionTimer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -26,13 +27,13 @@ public class UHCRun extends JavaPlugin {
         saveDefaultConfig();
         config = this.getConfig();
         gameLaunch = false;
-        commandsUHC = new CommandsUHC(this);
+
 
 
         scoreBoard = new ScoreBoard(this);
         scoreBoard.setBeforeGame();
 
-
+        commandsUHC = new CommandsUHC(this);
 
         String worldname = config.getString("game.map");
         World world = Bukkit.getWorld(worldname);
@@ -64,7 +65,7 @@ public class UHCRun extends JavaPlugin {
     public void onDisable() {
 
 
-        scoreBoard.del();
+
         boolean verifTeamDel = commandsUHC.deleteAllScoreBoardTeams();
         if(verifTeamDel) {
             getServer().getConsoleSender().sendMessage(ChatColor.RED + "[UHCRun] Scoreboard Teams correctly deleted !");
@@ -73,7 +74,7 @@ public class UHCRun extends JavaPlugin {
             getServer().getConsoleSender().sendMessage(ChatColor.RED + "[UHCRun] Error : Scoreboard Teams not properly deleted !");
 
         }
-
+        scoreBoard.del();
 
 
         getServer().getConsoleSender().sendMessage(ChatColor.RED + "[UHCRun] plugin disabled !");
@@ -121,21 +122,17 @@ public class UHCRun extends JavaPlugin {
 
 
     public void launchGame(Boolean team) {
-        int x = config.getInt("spawn.coordonate.x");
-        int z = config.getInt("spawn.coordonate.z");
-        int minDistance = 100;
-        int maxRange = (config.getInt("game.map-size") /2);
+
         if(team) {
 
-            String playersSelector = "@a[team=!]";
-            boolean respectTeams = true;
+
 
             commandsUHC.deleteEmptyTeams();
             setGameLaunch(true);
 
 
-            Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), String.format("spreadplayers %d %d %d %d %b %s", x, z, minDistance, maxRange, respectTeams, playersSelector));
-
+            //Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), String.format("spreadplayers %d %d %d %d %b %s", x, z, minDistance, maxRange, respectTeams, playersSelector));
+            commandsUHC.spreedPlayers();
             for(Player p : Bukkit.getOnlinePlayers()) {
                 if(commandsUHC.isInATeam(p)) {
                     p.setGameMode(GameMode.SURVIVAL);
@@ -155,9 +152,17 @@ public class UHCRun extends JavaPlugin {
 
             }
 
-            if(config.getBoolean("game.gradualReduction.enableReduction")) {
+
+            if(config.getBoolean("taupe.enableTaupe")) {
+                BeforeTaupeTimer beforeTaupeTimer = new BeforeTaupeTimer(this);
+                beforeTaupeTimer.runTaskTimer(this, 0, 20);
+            }
+            else if(config.getBoolean("game.gradualReduction.enableReduction")) {
                 ReductionTimer reductionTimer = new ReductionTimer(this);
                 reductionTimer.runTaskTimer(this, 0, 20);
+            }
+            else{
+                scoreBoard.setInEndgame();
             }
 
         }
@@ -179,6 +184,12 @@ public class UHCRun extends JavaPlugin {
 
         wb.setSize(mapSize, sp);
     }
+
+    public void selectTaupes() {
+        commandsUHC.selectionTaupe();
+
+    }
+
 
 
 }

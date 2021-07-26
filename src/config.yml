@@ -37,7 +37,7 @@ game:
 #    obsidianGenerate: true
     # 0 for classic generation // 1 for double ores...
 #    oreIncrease: 0.0
-#taupe:
-#  enableTaupe: false
-#  #Time (in minutes) before announce of taupe
-#  TimeBeforeReveal: 10
+taupe:
+  enableTaupe: false
+  #Time (in minutes) before announce of taupe
+  TimeBeforeReveal: 10

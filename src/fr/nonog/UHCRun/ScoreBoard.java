@@ -28,10 +28,19 @@ public class ScoreBoard {
         health = scoreBoard.registerNewObjective("healthUHC", "health");
         health.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 
+        for(Player all : Bukkit.getOnlinePlayers()) {
+            all.setScoreboard(scoreBoard);
+        }
+
     }
     public void del() {
         nameUHC.unregister();
         health.unregister();
+        scoreBoard = null;
+    }
+
+    public Scoreboard getScoreBoard() {
+        return scoreBoard;
     }
 
     public void setScoreBoardForThisPlayer(Player p) {
@@ -192,6 +201,29 @@ public class ScoreBoard {
             all.setScoreboard(scoreBoard);
         }
 
+    }
+
+    public void setBeforeTaupe(int timeS, int timeM) {
+        for(String e : scoreBoard.getEntries()) {
+            scoreBoard.resetScores(e);
+        }
+
+        Score s1 = nameUHC.getScore("");
+        s1.setScore(10);
+        Score s2 = nameUHC.getScore(ChatColor.AQUA+"The Taupes (intruders) will ");
+        s2.setScore(9);
+        Score s4 = nameUHC.getScore(ChatColor.AQUA+"soon be revealed");
+        s4.setScore(8);
+        Score s5 = nameUHC.getScore("  ");
+        s5.setScore(7);
+        Score s6 = nameUHC.getScore(ChatColor.GREEN+"Taupes Revealed in: :"+ChatColor.YELLOW+" "+timeM+"m "+timeS+"s");
+        s6.setScore(6);
+        Score s7 = nameUHC.getScore("    ");
+        s7.setScore(5);
+
+        for(Player all : Bukkit.getOnlinePlayers()) {
+            all.setScoreboard(scoreBoard);
+        }
     }
 
 
