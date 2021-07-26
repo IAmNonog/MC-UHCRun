@@ -31,10 +31,10 @@ ________________________________________________
 # Course of the game
   
   The phases are executed in the following order:  
-     1: Time before TAUPES announcement (if TAUPE option enabled)  
-     2: Time before map reduction (if GradualReduction option activated)  
-     3: Reduction of the map (if GradualReduction option activated) [the duration of this phase depends on the selected speed Block/seconds)  
-     4: EndGame  
+     * 1: Time before TAUPES announcement (if TAUPE option enabled)  
+     * 2: Time before map reduction (if GradualReduction option activated)  
+     * 3: Reduction of the map (if GradualReduction option activated) [the duration of this phase depends on the selected speed Block/seconds)  
+     * 4: EndGame  
   If one of its phases is disabled (depending on the options chosen in this file) the game will go directly to the next phase  
 
   type "/uhc" to get the list of commands  
