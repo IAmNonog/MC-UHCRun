@@ -16,7 +16,7 @@ NB: a TAUPE GUN is a UHC but an intruder is hiding in each team. This one receiv
 type "/uhc" to get the list of commands
 
 _______________________________________________
-#Configure a game
+# Configure a game
 
 play without a team: just enter "/uhc start single"
 
@@ -28,7 +28,7 @@ play as a team:
   
   
 ________________________________________________
-#Course of the game
+# Course of the game
   
   The phases are executed in the following order:
      1: Time before TAUPES announcement (if TAUPE option enabled)
