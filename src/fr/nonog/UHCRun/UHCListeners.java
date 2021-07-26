@@ -59,6 +59,10 @@ public class UHCListeners implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
+        for(Player pl : Bukkit.getOnlinePlayers()) {
+            pl.getWorld().playSound(pl.getLocation(), Sound.WITHER_SPAWN, 3.0F, 1.0F);
+        }
+
         if(main.isGameLaunch()) {
             boolean quitverif = commandsUHC.leavePlayerTeam(e.getEntity());
             if(quitverif) {
@@ -76,6 +80,10 @@ public class UHCListeners implements Listener {
                 }
 
                 main.setGameLaunch(false);
+
+                for(Player pl : Bukkit.getOnlinePlayers()) {
+                    pl.getWorld().playSound(pl.getLocation(), Sound.WITHER_DEATH, 3.0F, 1.0F);
+                }
 
 
             }
