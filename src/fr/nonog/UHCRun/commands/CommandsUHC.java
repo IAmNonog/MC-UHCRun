@@ -241,6 +241,7 @@ public class CommandsUHC implements CommandExecutor {
                 commandSender.sendMessage(ChatColor.GOLD + "/uhc team del [TeamName]" + ChatColor.WHITE +" : delete the indicated team");
                 commandSender.sendMessage(ChatColor.GOLD + "/uhc team list" + ChatColor.WHITE +" : get the list of teams");
                 commandSender.sendMessage(ChatColor.GOLD + "/uhc start [Team/Single]" + ChatColor.WHITE +" : start the game");
+                commandSender.sendMessage(ChatColor.GOLD + "/t [MSG]" + ChatColor.WHITE +" : communicate with other 'Taupes'");
 
 
 
@@ -248,6 +249,34 @@ public class CommandsUHC implements CommandExecutor {
 
 
         }
+
+
+        //Taupe chat :
+        if(command.getName().equalsIgnoreCase("t")) {
+            if(commandSender instanceof Player) {
+                Player p = (Player) commandSender;
+
+                try{
+                    if(teams.get("TAUPES").contains(p)) {
+                        String msg = "[TAUPES] - ["+p.getDisplayName()+"]";
+
+                        for(int i=0; i<strings.length; i++) {
+                            msg+=" "+strings[i];
+                        }
+                        for(Player pl : teams.get("TAUPES")) {
+                            pl.sendMessage(ChatColor.RED+msg);
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"UHCRun]"+e.getMessage());
+                    p.sendMessage(ChatColor.RED+"Error, you are not a Taupe !");
+                }
+
+
+            }
+        }
+
 
         return exec;
     }
@@ -399,8 +428,14 @@ public class CommandsUHC implements CommandExecutor {
             if(teams.get(nameTeam).size() == 0) {
                 namesTeam.remove();
                 //teams.remove(nameTeam);
-                scoreboardTeams.get(nameTeam).unregister();
-                scoreboardTeams.remove(nameTeam);
+                try{
+                    scoreboardTeams.get(nameTeam).unregister();
+                    scoreboardTeams.remove(nameTeam);
+                }
+                catch (Exception e) {
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"[UHCRun] - "+e.getMessage());
+                }
+
                 Bukkit.broadcastMessage(ChatColor.GOLD+"[UHC] - Team "+nameTeam+" has been eliminated (empty team)");
             }
         }
@@ -442,6 +477,7 @@ public class CommandsUHC implements CommandExecutor {
         }
         for(Player pl : teams.get("TAUPES")) {
             pl.sendMessage(ChatColor.RED+"[UHC] - You are a Taupe (a traitor) you must betray your team and win with the other Taupes");
+            pl.sendMessage(ChatColor.RED+"[UHC] - use '/t' to communicate with other Taupes");
             pl.sendMessage(ChatColor.RED+"[UHC] - Here is the list of TAUPES : ");
             for(Player pla : teams.get("TAUPES")) {
                 pl.sendMessage(ChatColor.RED+"- "+pla.getDisplayName());
@@ -470,11 +506,13 @@ public class CommandsUHC implements CommandExecutor {
     public void deleteAllTeams() {
         deleteEmptyTeams();
         deleteAllScoreBoardTeams();
+        teams.clear();
+        /*
         Iterator<String> namesTeam = teams.keySet().iterator();
         while(namesTeam.hasNext()) {
             namesTeam.remove();
 
-        }
+        }*/
     }
     public void createSoloTeams() {
         deleteAllTeams();

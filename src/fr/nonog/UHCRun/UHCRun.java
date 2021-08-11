@@ -51,6 +51,7 @@ public class UHCRun extends JavaPlugin {
 
 
         getCommand("UHC").setExecutor(commandsUHC);
+        getCommand("t").setExecutor(commandsUHC);
 
 
         getServer().getPluginManager().registerEvents(new UHCListeners(this, commandsUHC, scoreBoard), this);
@@ -124,6 +125,8 @@ public class UHCRun extends JavaPlugin {
 
     public void launchGame(Boolean team) {
 
+        Bukkit.getWorld(config.getString("game.map")).setTime(0);
+
         if(team) {
 
 
@@ -134,6 +137,7 @@ public class UHCRun extends JavaPlugin {
 
             //Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), String.format("spreadplayers %d %d %d %d %b %s", x, z, minDistance, maxRange, respectTeams, playersSelector));
             commandsUHC.spreedPlayers();
+
             for(Player p : Bukkit.getOnlinePlayers()) {
                 if(commandsUHC.isInATeam(p)) {
                     p.setGameMode(GameMode.SURVIVAL);
