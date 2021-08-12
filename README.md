@@ -1,12 +1,12 @@
 # MC-UHCRun
-Minecraft Spigot plugin 1.8 (Add-on for Minecraft Java server) 
+Minecraft Spigot plugin 1.8 and 1.17 (Add-on for Minecraft Java server) 
 
 UHC configurable [ UHC - UHC Run - Taupe Run - Taupe Gun ]
 
 _______________________________________________
 
-Minecraft version : 1.8
-(New versions will be available soon)
+Minecraft version : 1.8 & 1.17 
+(2 different release : be careful to download the correct version)
 
 this plugin is a customizable UHC Game. Depending on the parameters enabled or not, you can play a UHC CLASSIC, a UHC RUN, a TAUPE GUN, a TAUPE RUN.
 To change between these different games you can change the different settings in config.yml  
