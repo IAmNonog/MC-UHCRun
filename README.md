@@ -5,7 +5,7 @@ UHC configurable [ UHC - UHC Run - Taupe Run - Taupe Gun ]
 
 _______________________________________________
 
-Minecraft version : 1.8 & 1.17 
+Minecraft version : 1.8 & 1.17  
 (2 different release : be careful to download the correct version)
 
 this plugin is a customizable UHC Game. Depending on the parameters enabled or not, you can play a UHC CLASSIC, a UHC RUN, a TAUPE GUN, a TAUPE RUN.
