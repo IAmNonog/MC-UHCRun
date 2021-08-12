@@ -1,0 +1,50 @@
+#######################################
+#          UHC - TAUPE - RUN          #
+#######################################
+
+##########          WARNING          ##########
+#   You are using a beta version of the plugin.
+#   Do not hesitate to report bugs on github and check if a newer version is not available
+#   [https://github.com/IAmNonog/MC-UHCRun] )
+##############################################################################################
+#
+#  this plugin is a customizable UHC Game. Depending on the parameters enabled or not, you can play a UHC CLASSIC, a UHC RUN, a TAUPE GUN, a TAUPE RUN.
+#  The phases are executed in the following order:
+#     1: Time before TAUPES announcement (if TAUPE option enabled)
+#     2: Time before map reduction (if GradualReduction option activated)
+#     3: Reduction of the map (if GradualReduction option activated) [the duration of this phase depends on the selected speed Block/seconds)
+#     4: EndGame
+#  If one of its phases is disabled (depending on the options chosen in this file) the game will go directly to the next phase
+#
+#  type "/uhc" to get the list of commands
+#  small clarification on the command : "/uhc team create [nameTeam] [COLOR]" available colors : RED, BLUE, GREEN, GOLD, WHITE, YELLOW, AQUA, PURPLE
+#  For more information : https://github.com/IAmNonog/MC-UHCRun/blob/main/README.md
+##############################################################################################
+spawn:
+  buildSpawn: true
+  #coordonate of the center of the spawn
+  coordonate:
+    x: 0
+    y: 200
+    z: 0
+game:
+  map: "world"
+  #Size of border (1000x1000 by default)
+  map-size: 1000
+  gradualReduction:
+    enableReduction: true
+    #Time in minutes
+    TimeBeforeReduction: 30
+    mapSizeAfterReduction: 300
+    #Number of reduction blocks per second
+    ReductionSpeed: 5
+run:
+  enableRun: true
+  generation:
+    #Warning ! this is an experimental system who made a lot of lag (/uhc generate)
+    #Once you enter this command, more iron and diamond ores will be added to the map (high risk of crashing, be careful)
+    increaseOreGeneration: false
+taupe:
+  enableTaupe: false
+  #Time (in minutes) before announce of taupe
+  TimeBeforeReveal: 10

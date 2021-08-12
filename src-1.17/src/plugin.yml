@@ -1,0 +1,11 @@
+name: UHCRun
+author: nonog
+version: 0.6
+main: fr.nonog.UHCRun.UHCRun
+description: UHC configurable plugin choose between - UHC / UHC Run / Taupe Gun / Taupe Run - in configuration
+commands:
+  UHC:
+    description: get the list of commands for this plugin
+    permission: UHC.use.uhc
+  t:
+    description: communicate in the "Taupes" chat
